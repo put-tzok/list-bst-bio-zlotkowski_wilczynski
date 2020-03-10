@@ -111,8 +111,8 @@ int main() {
                 assert(list_size() == l);   // list size must be equal to the expected value
                 list_delete(t[k]);
             }
-            assert(list_size() == 0);       // after deletion loop, the list size is zero
-            assert(head == NULL);           // after deletion loop, the list's head is NULL
+            assert(list_size() == 0);       // after all deletions, the list size is zero
+            assert(head == NULL);           // after all deletions, the list's head is NULL
 
             free(t);
 
