@@ -41,18 +41,6 @@ unsigned int tree_size(struct node *element) {
     return 0;
 }
 
-void insert_increasing(int *t, int n) {
-    // TODO: implement
-}
-
-void insert_random(int *t, int n) {
-    // TODO: implement
-}
-
-void insert_binary(int *t, int n) {
-    // TODO: implement
-}
-
 /*
  * Fill an array with increasing values.
  *
@@ -113,6 +101,23 @@ bool is_bst(struct node *element) {
         && (element->key < element->right->key)
         && is_bst(element->left)
         && is_bst(element->right);
+}
+
+void insert_increasing(int *t, int n) {
+    for (int i = 0; i < n; i++) {
+        tree_insert(t[i]);
+    }
+}
+
+void insert_random(int *t, int n) {
+    shuffle(t, n);
+    for (int i = 0; i < n; i++) {
+        tree_insert(t[i]);
+    }
+}
+
+void insert_binary(int *t, int n) {
+    // TODO: implement
 }
 
 char *insert_names[] = { "Increasing", "Random", "Binary" };
