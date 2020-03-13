@@ -17,15 +17,17 @@ struct node {
 // tree's beginning is called the root
 struct node *root = NULL;
 
+struct node **tree_search(struct node **candidate, int value) {
+    // TODO: implement
+    return NULL;
+}
+
 struct node* tree_insert(int value) {
     // TODO: implement
     return NULL;
 }
 
-struct node **tree_search(struct node **candidate, int value) {
-    // TODO: implement
-    return NULL;
-}
+
 
 struct node **tree_maximum(struct node **candidate) {
     // TODO: implement
