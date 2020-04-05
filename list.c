@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-unsigned int ns[] = { 10, /* TODO: fill values which will be used as lists' sizes */ };
+unsigned int ns[] = {10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000};
 
 // each list node contains an integer key value and pointer to next list node
 struct node {
@@ -15,24 +15,45 @@ struct node {
 // list's beginning is called the head of list
 struct node *head = NULL;
 
-
 struct node* list_insert(int value) {
-    // TODO: implement
+struct node *New = (struct node *)malloc(sizeof(struct node));
+    New->key = value;
+    New->next = head;
+    head = New;
     return NULL;
 }
-
 struct node* list_search(int value) {
-    // TODO: implement
-    return NULL;
+    struct node *temp;
+    temp=head;
+    while(temp != NULL && temp->key != value){
+        temp=temp->next;
+    }
+    return temp;
 }
 
 void list_delete(int value) {
-    // TODO: implement
+    if(head->key == value){
+        head=head->next;
+    }else{
+        struct node *prev, *temp;
+        temp = head;
+        while(temp->key != value){
+            prev = temp;
+            temp = temp-> next;
+        }
+        prev->next = temp->next;
+    }
 }
 
 unsigned int list_size() {
-    // TODO: implement
-    return 0;
+    int counter = 0;
+    struct node *temp;
+    temp = head;
+    while(temp != NULL){
+        counter=counter+1;
+        temp=temp->next;
+    }
+    return counter;
 }
 
 /*
@@ -74,7 +95,7 @@ int main() {
             unsigned int n = ns[j];
 
             // always create an array of size `n` and fill it with increasing values
-            int *t = malloc(n * sizeof(*t));
+            int *t = (int *)malloc(n * sizeof(*t));
             fill_increasing(t, n);
 
             // if true, reorder array elements randomly
@@ -85,8 +106,9 @@ int main() {
             // insert elements in the order present in array `t`
             clock_t insertion_time = clock();
             for (unsigned int k = 0; k < n; k++) {
-                struct node *iter = list_insert(t[k]);
-                assert(iter != NULL);       // inserted element cannot be NULL
+                    list_insert(t[k]);
+                struct node *iter = head;
+                assert(iter != NULL);  // inserted element cannot be NULL
                 assert(iter->key == t[k]);  // inserted element must contain the expected value
             }
             insertion_time = clock() - insertion_time;
@@ -98,7 +120,7 @@ int main() {
             clock_t search_time = clock();
             for (unsigned int k = 0; k < n; k++) {
                 struct node *iter = list_search(t[k]);
-                assert(iter != NULL);       // found element cannot be NULL
+              assert(iter != NULL);       // found element cannot be NULL
                 assert(iter->key == t[k]);  // found element must contain the expected value
             }
             search_time = clock() - search_time;
