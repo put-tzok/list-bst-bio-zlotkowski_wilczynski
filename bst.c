@@ -22,16 +22,17 @@ struct node **tree_search(struct node **candidate, int value) {
         return candidate;
     }
     if (value < (**candidate).key){
-        return tree_search((**candidate).left, value);
+        return tree_search(&(**candidate).left, value);
     }
     if (value > (**candidate).key){
-        return tree_search((**candidate).right, value);
+        return tree_search(&(**candidate).right, value);
     }
     return candidate;
 }
 
+
 struct node* tree_insert(int value) {
-struct node *temp, *help;
+struct node **temp, *help;
 help = (struct node *)malloc(sizeof(struct node));
 help->key = value;
 help->left = NULL;
@@ -39,98 +40,38 @@ help->right = NULL;
 if (root == NULL){
     root = help;
     return NULL;
+} else{
+temp = tree_search(&root, value);
+*temp = help;
 }
-temp = root;
-while(1){
-    if (temp->key > value){
-        if (temp->left == NULL){
-            temp->left = help;
-            break;
-        } else {
-            temp = temp->left;
-        }
-    }
-    if (temp->key < value){
-        if (temp->right == NULL){
-            temp->right = help;
-            break;
-        } else {
-            temp = temp->right;
-        }
-    }
-}
-return NULL;
 }
 
 
 
 struct node **tree_maximum(struct node **candidate) {
     if((**candidate).right != NULL){
-        return tree_maximum((**candidate).right);
-        return candidate;
+        return tree_maximum(&(*candidate)->right);
     }
+    return candidate;
 }
 
 void tree_delete(int value) {
-    struct node *temp, *prev, *help;
-    temp = root;
-    while(1){
-        if(temp->key < value){
-            prev = temp;
-            temp = temp->left;
-            continue;
-        }
-        if(temp->key > value){
-            prev = temp;
-            temp = temp->right;
-            continue;
-        }
-        break;
-    }
-    if(temp->right == NULL && temp->left == NULL){
-        if (prev->left == temp){
-            prev->left = NULL;
-        } else{
-            prev->right = NULL;
-        }
-        temp = NULL;
-    } else if(temp->right == NULL && temp->left != NULL){
-        if (prev->left == temp){
-            prev->left = temp->left;
-        } else{
-            prev->right = temp->left;
-        }
-    } else if(temp->right != NULL && temp->left == NULL){
-        if (prev->left == temp){
-            prev->left = temp->right;
-        } else{
-            prev->right = temp->right;
-        }
-    } else if(temp->right != NULL && temp->left != NULL){
-        help = tree_maximum(temp->left);
-        temp->key = help->key;
-        help = help->left;
-    }
-}
-unsigned int size;
-void count(struct node *element)
-{
-    if((*element).left != NULL)
-    {
-        size++;
-        count((*element).left);
-    }
-    if((*element).right != NULL)
-    {
-        size++;
-        count((*element).right);
+    struct node **temp, **help;
+    temp = tree_search(&root, value);
+    if((*temp)->right == NULL && (*temp)->left == NULL){
+        *temp = NULL;
+    } else if((*temp)->right == NULL && (*temp)->left != NULL){
+        *temp = (*temp)->left;
+    } else if((*temp)->right != NULL && (*temp)->left == NULL){
+       *temp = (*temp)->right;
+    } else if((*temp)->right != NULL && (*temp)->left != NULL){
+        help = tree_maximum(&(*temp)->left);
+        (*temp)->key = (*help)->key;
+        *help = (*help)->left;
     }
 }
 unsigned int tree_size(struct node *element) {
-    size = 0;
-    *element = *root;
-    count(element);
-    return size+1;
+
 }
 
 
@@ -241,7 +182,7 @@ int main(int argc, char **argv) {
             // search for every element in the order present in array `t`
             clock_t search_time = clock();
             for (unsigned int k = 0; k < n; k++) {
-                struct node **pnode = tree_search(&root, t[k]);
+               struct node **pnode = tree_search(&root, t[k]);
                 struct node *iter = *pnode;
                 assert(iter != NULL);           // found element cannot be NULL
                 assert(iter->key == t[k]);      // found element must contain the expected value
@@ -271,3 +212,5 @@ int main(int argc, char **argv) {
     }
     return 0;
 }
+
+
