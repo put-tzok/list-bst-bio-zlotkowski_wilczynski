@@ -18,30 +18,121 @@ struct node {
 struct node *root = NULL;
 
 struct node **tree_search(struct node **candidate, int value) {
-    // TODO: implement
-    return NULL;
+    if (*candidate == NULL){
+        return candidate;
+    }
+    if (value < (**candidate).key){
+        return tree_search((**candidate).left, value);
+    }
+    if (value > (**candidate).key){
+        return tree_search((**candidate).right, value);
+    }
+    return candidate;
 }
 
 struct node* tree_insert(int value) {
-    // TODO: implement
+struct node *temp, *help;
+help = (struct node *)malloc(sizeof(struct node));
+help->key = value;
+help->left = NULL;
+help->right = NULL;
+if (root == NULL){
+    root = help;
     return NULL;
+}
+temp = root;
+while(1){
+    if (temp->key > value){
+        if (temp->left == NULL){
+            temp->left = help;
+            break;
+        } else {
+            temp = temp->left;
+        }
+    }
+    if (temp->key < value){
+        if (temp->right == NULL){
+            temp->right = help;
+            break;
+        } else {
+            temp = temp->right;
+        }
+    }
+}
+return NULL;
 }
 
 
 
 struct node **tree_maximum(struct node **candidate) {
-    // TODO: implement
-    return NULL;
+    if((**candidate).right != NULL){
+        return tree_maximum((**candidate).right);
+        return candidate;
+    }
 }
 
 void tree_delete(int value) {
-    // TODO: implement
+    struct node *temp, *prev, *help;
+    temp = root;
+    while(1){
+        if(temp->key < value){
+            prev = temp;
+            temp = temp->left;
+            continue;
+        }
+        if(temp->key > value){
+            prev = temp;
+            temp = temp->right;
+            continue;
+        }
+        break;
+    }
+    if(temp->right == NULL && temp->left == NULL){
+        if (prev->left == temp){
+            prev->left = NULL;
+        } else{
+            prev->right = NULL;
+        }
+        temp = NULL;
+    } else if(temp->right == NULL && temp->left != NULL){
+        if (prev->left == temp){
+            prev->left = temp->left;
+        } else{
+            prev->right = temp->left;
+        }
+    } else if(temp->right != NULL && temp->left == NULL){
+        if (prev->left == temp){
+            prev->left = temp->right;
+        } else{
+            prev->right = temp->right;
+        }
+    } else if(temp->right != NULL && temp->left != NULL){
+        help = tree_maximum(temp->left);
+        temp->key = help->key;
+        help = help->left;
+    }
+}
+unsigned int size;
+void count(struct node *element)
+{
+    if((*element).left != NULL)
+    {
+        size++;
+        count((*element).left);
+    }
+    if((*element).right != NULL)
+    {
+        size++;
+        count((*element).right);
+    }
+}
+unsigned int tree_size(struct node *element) {
+    size = 0;
+    *element = *root;
+    count(element);
+    return size+1;
 }
 
-unsigned int tree_size(struct node *element) {
-    // TODO: implement
-    return 0;
-}
 
 /*
  * Fill an array with increasing values.
