@@ -5,7 +5,7 @@
 #include <signal.h>
 #include <time.h>
 
-unsigned int ns[] = { 10, /* TODO: fill values which will be used as lists' sizes */ };
+unsigned int ns[] = { 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000 };
 
 // each tree node contains an integer key and pointers to left and right children nodes
 struct node {
@@ -37,14 +37,10 @@ help = (struct node *)malloc(sizeof(struct node));
 help->key = value;
 help->left = NULL;
 help->right = NULL;
-if (root == NULL){
-    root = help;
-    return NULL;
-} else{
 temp = tree_search(&root, value);
 *temp = help;
 }
-}
+
 
 
 
@@ -71,7 +67,13 @@ void tree_delete(int value) {
     }
 }
 unsigned int tree_size(struct node *element) {
-
+    int size;
+     if (element==NULL){
+        return 0;
+    }
+    else {
+        return 1+tree_size(element->left)+tree_size(element->right);
+    }
 }
 
 
@@ -149,9 +151,23 @@ void insert_random(int *t, int n) {
         tree_insert(t[i]);
     }
 }
-
+void insert_biject(int *t, int Cor_1, int Cor_2) {
+    if (Cor_1==Cor_2){
+        tree_insert(t[Cor_1]);
+    }
+    else if (Cor_2-Cor_1==1){
+        tree_insert(t[Cor_1]);
+        tree_insert(t[Cor_2]);
+    }
+    else{
+        int q=Cor_1+(Cor_2-Cor_1)/2;
+        tree_insert(t[q]);
+        insert_biject(t, Cor_1, q-1);
+        insert_biject(t, q+1, Cor_2);
+    }
+}
 void insert_binary(int *t, int n) {
-    // TODO: implement
+    insert_biject(t, 0, n-1);
 }
 
 char *insert_names[] = { "Increasing", "Random", "Binary" };
@@ -212,5 +228,4 @@ int main(int argc, char **argv) {
     }
     return 0;
 }
-
 
